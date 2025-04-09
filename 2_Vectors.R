@@ -203,4 +203,26 @@ polygon(c(x - delta/2, x_fill, x + delta/2),
         c(0, y_fill, 0),
         col = "salmon", border = NA)
 
+#----------------------------------------------------
+# 2.5.4 From normal to Chi2 to t-student distribution
+#----------------------------------------------------
 
+nsim <- 1000                 # Number of simulations
+X2 <- vector(length = nsim)  # Store the Chi2 values
+t <- vector(length = nsim)   # Store the t values
+df <- 9                      # Degrees of freedom
+
+for(i in 1:nsim) {
+
+  z <- rnorm(df)             # Sample from standard normal
+  X2[i] <- sum(z^2)          # Sum the squares of the normals (Chi2)
+  Z <- rnorm(1)              # Take one sample from the standard normal
+  t[i] <- Z / sqrt(X2[i]/df) # Build a variable that is t-distributed
+
+}
+
+hist(X2, freq = FALSE) # Plot Chi2 distribution
+curve(dchisq(x, df = df), add = TRUE)
+
+hist(t, freq = FALSE) # Plot t-student distribution
+curve(dt(x, df = df), add = TRUE)
