@@ -1,0 +1,718 @@
+---
+title: "BEGINNER AND INTERMEDIATE LEVEL R COURSE"
+author: "Marcos Jimenez"
+format: pdf
+editor: visual
+---
+
+## About the workshop
+
+Materials can be accessed at <https://github.com/Marcosjnez/R_USF>.
+
+## 1. R as a Calculator
+
+R can be used as a calculator:
+
+```{r, eval=TRUE}
+3 + 2              # Sum
+5 - 2              # Subtraction
+3 * 4              # Multiplication
+15 / 5             # Division
+2^3                # Power
+10 + (2 + 3) * 3^2 # Preference order for computing
+```
+
+---
+
+## 1.1. Assignments
+
+R can store values using symbolic names. There are multiple ways to assign values:
+
+```{r, eval=TRUE}
+a <- 3 # Best option
+3 -> a # Less common...
+a = 3  # Not recommended
+a      # Visualize the object
+```
+
+---
+
+## 1.2. Reserved Words
+
+Some names are reserved in R and cannot be used as variables:
+
+```{r, eval=TRUE}
+# TRUE <- 4 # Error
+?reserved # See reserved words
+?objects
+```
+
+---
+
+## 1.3. Symbolic Operations
+
+You can use variables in arithmetic operations:
+
+```{r, eval=TRUE}
+a <- 3
+b <- 2
+c <- a + b
+```
+
+---
+
+## 2. Data Types in R
+
+R supports several basic data types.
+
+---
+
+## 2.1. Numeric
+
+```{r, eval=TRUE}
+a <- 1
+b <- 2
+c <- 1 + 2
+```
+
+---
+
+## 2.2. Character Strings
+
+```{r, eval=TRUE}
+d <- "cat"
+e <- "dog"
+```
+
+---
+
+## 2.3. Factors
+
+Factors are categorical variables:
+
+```{r, eval=TRUE}
+d <- factor("cat")
+e <- "dog"
+```
+
+---
+
+## 2.4. Logical Data
+
+Logical operations return `TRUE` or `FALSE`:
+
+```{r, eval=TRUE}
+A <- 5
+A == A # TRUE
+B <- 5
+A == B # TRUE
+
+a <- 4
+A == a # FALSE: R is case-sensitive
+A > a  # TRUE: A is greater than a
+```
+
+---
+
+## 2.5. Complex Numbers
+
+R supports complex numbers:
+
+```{r, eval=TRUE}
+i <- 1i           # Square root of -1
+exp(i*pi) + 1     # Euler's identity
+```
+
+---
+
+## 2.6. Constants
+
+R has built-in constants like `pi`:
+
+```{r, eval=TRUE}
+?Constants
+pi
+```
+
+---
+
+## 2.1. Vectors
+
+Vectors can hold elements of the same type:
+
+```{r, eval=TRUE}
+n <- c(1, 2, 3, 4)                           # Numeric
+l <- c(TRUE, FALSE)                          # Logical
+k <- c("cat", "dog")                         # Character
+k <- factor(c("cat", "dog"), ordered = TRUE) # Factor
+x <- c(1 + 2i, 4i)                           # Complex
+
+# Preference order:
+# 1. Character
+# 2. Complex
+# 3. Numeric
+# 4. Logical / Factor
+```
+
+---
+
+## 2.2. Constructing Vectors
+
+```{r, eval=TRUE}
+# Vector of numbers from 0 to 20 by steps of 2:
+y <- seq(from = 0, to = 20, by = 2)
+w <- 1:4 # Vector of integers from 1 to 4
+
+# Concatenate the vectors:
+z <- c(y, w)
+
+# Take samples from random variables:
+set.seed(2025)
+rbinom(n = 10, size = 5, prob = 0.5)
+rnorm(n = 10, mean = 0, sd = 1)
+rt(n = 10, df = 5)
+rchisq(n = 10, df = 5)
+runif(n = 10, min = 0, max = 1)
+
+# Random letters and categories:
+sample(x = letters, size = 10, replace = TRUE)
+sample(c("dog", "cat"), size = 5, replace = TRUE)
+
+# Automatic creation of long character vectors:
+paste("Sujeto", 1:20, sep = "")
+```
+
+---
+
+## 2.3. Vector Indexing
+
+```{r, eval=TRUE}
+z <- 1:6
+
+# Extract elements:
+z[1]
+z[c(2, 5)]
+
+# Remove elements:
+z[-1]
+z[-c(2, 5)]
+```
+
+---
+
+## 2.4. Numeric Vector Functions
+
+```{r, eval=TRUE}
+x <- sample(x = 1:5, size = 6, replace = TRUE)
+
+mean(x)
+median(x)
+var(x)
+sd(x)
+min(x)
+max(x)
+sum(x)
+prod(x)
+log(x)
+exp(x)
+length(x)
+head(x, n = 3)
+tail(x, n = 3)
+table(x)
+
+?mean
+x[1] <- NA
+mean(x, na.rm = TRUE)
+```
+
+---
+
+## 2.4.1. Plotting Two Numeric Vectors
+
+```{r, eval=TRUE}
+x <- rnorm(n = 100, mean = 100, sd = 15)
+y <- rnorm(n = 100, mean = 100, sd = 15)
+
+plot(x, y, ylab = "Coordinate 1", xlab = "Coordinate 2")
+
+# Highlight specific coordinates:
+condition <- x > 100 & x < 115 & y > 100 & y < 115
+indices <- which(condition)
+points(x[indices], y[indices], col = "red")
+
+# Draw segments:
+segments(x0 = 100, x1 = 100, y0 = 0, y1 = 150, lty = "dashed")
+segments(x0 = 115, x1 = 115, y0 = 0, y1 = 150, lty = "dashed")
+segments(x0 = 0, x1 = 150, y0 = 100, y1 = 100, lty = "dashed")
+segments(x0 = 0, x1 = 150, y0 = 115, y1 = 115, lty = "dashed")
+```
+
+---
+
+## 2.5. Simulating Random Variables
+
+### 2.5.1. Binomial Distribution
+
+```{r, eval=TRUE}
+set.seed(123)                           # Random seed
+N <- 1000                               # Sample size
+n <- 8                                  # Number of trials
+prob <- 0.60                            # Probability of success
+b <- rbinom(N, size = n, prob = prob)   # 1000 samples from Binomial
+empirical <- table(b)/1000              # Empirical proportions
+
+factural <- dbinom(0:n, size = n,
+                   prob = prob)         # Theoretical proportions
+cbind(empirical, factural)              # Compare empirical and theoretical
+
+# Plot the theoretical distribution:
+plot(0:n, factural, main = paste("X ~ B(n=", n, ", p=", prob, ")", sep = ""),
+     xlab = "X", ylab = "Probability", type = "h")
+```
+
+---
+
+### 2.5.2. Normal Distribution
+
+```{r, eval=TRUE}
+X <- rnorm(n = 100000, mean = 0, sd = 1)
+
+x <- 1.25
+delta <- 1
+mean((X > x-delta/2 & X < x+delta/2)) / delta
+
+dnorm(x, mean = 0, sd = 1)
+
+curve(dnorm(x, mean = 0, sd = 1), xlim = c(-3, 3), ylab = "Density")
+segments(x0 = x-delta/2, x1 = x-delta/2, y0 = 0, y1 = dnorm(x-delta/2))
+segments(x0 = x+delta/2, x1 = x+delta/2, y0 = 0, y1 = dnorm(x+delta/2))
+
+x_fill <- seq(x - delta/2, x + delta/2, length.out = 100)
+y_fill <- dnorm(x_fill, mean = 0, sd = 1)
+
+polygon(c(x - delta/2, x_fill, x + delta/2),
+        c(0, y_fill, 0),
+        col = "salmon", border = NA)
+```
+
+---
+
+### 2.5.3. Chi-Square Distribution
+
+```{r, eval=TRUE}
+df <- 5
+X <- rchisq(n = 100000, df = df)
+
+x <- 8
+delta <- 1
+mean((X > x-delta/2 & X < x+delta/2)) / delta
+
+dchisq(x, df = df)
+
+curve(dchisq(x, df = df), xlim = c(0, 15), ylab = "Density")
+segments(x0 = x-delta/2, x1 = x-delta/2, y0 = 0, y1 = dchisq(x-delta/2, df = df))
+segments(x0 = x+delta/2, x1 = x+delta/2, y0 = 0, y1 = dchisq(x+delta/2, df = df))
+
+x_fill <- seq(x - delta/2, x + delta/2, length.out = 100)
+y_fill <- dchisq(x_fill, df = df)
+
+polygon(c(x - delta/2, x_fill, x + delta/2),
+        c(0, y_fill, 0),
+        col = "salmon", border = NA)
+```
+
+---
+
+## 3.1. Creation of Matrices
+
+```{r, eval=TRUE}
+# Create a matrix with a number of rows and columns:
+N <- matrix(1:4, nrow = 2, ncol = 2)
+N
+
+# Create a matrix by binding vectors:
+x1 <- rnorm(n = 5, mean = 0, sd = 1)
+x2 <- runif(n = 5, min = 0, max = 1)
+rbind(x1, x2)
+X <- cbind(x1, x2)
+X
+
+# Set names:
+colnames(X) <- paste("Score", 1:2, sep = "_")
+rownames(X) <- paste("Suject", 1:5, sep = " ")
+X
+```
+
+---
+
+## 3.2. Matrix Indexing
+
+```{r, eval=TRUE}
+X <- matrix(rnorm(2*4), nrow = 2, ncol = 4)
+X
+
+X[2, 4] # Element in row 2, column 4
+X[2, ]  # All elements in row 2
+X[, 4]  # All elements in column 4
+```
+
+---
+
+## 3.3. Matrix Operations
+
+```{r, eval=TRUE}
+# Matrix by vector multiplication:
+set.seed(123)
+N <- 20
+p <- 4
+b <- rnorm(n = p, mean = 0.5, sd = 2)
+X <- matrix(rnorm(N*p), nrow = N, ncol = p-1)
+X <- cbind(1, X)
+
+e <- rnorm(N, mean = 0, sd = 1.5)
+y <- X %*% b + e
+
+fit <- lm(y ~ 0 + X)
+summary(fit)
+fit$coefficients
+solve(t(X) %*% X) %*% t(X) %*% y
+```
+
+---
+
+## 3.3. Matrix by Matrix Multiplication
+
+```{r, eval=TRUE}
+Z <- matrix(rnorm(6), nrow = 3, ncol = 2)
+Y <- matrix(rnorm(6), nrow = 2, ncol = 3)
+ZY <- Z %*% Y
+ZY
+
+Z[, 1, drop = FALSE] %*% Y[1, , drop = FALSE] +
+  Z[, 2, drop = FALSE] %*% Y[2, , drop = FALSE]
+```
+
+---
+
+## 3.3. Matrix Utilities
+
+```{r, eval=TRUE}
+ncol(ZY)
+nrow(ZY)
+rowSums(ZY)
+colMeans(ZY)
+
+# Apply a custom function to each column
+X <- matrix(runif(16), nrow = 4, ncol = 4)
+
+geomean <- function(x) {
+  n <- length(x)
+  result <- prod(x)^(1/n)
+  return(result)
+}
+
+apply(X, MARGIN = 2, FUN = geomean)
+```
+
+---
+
+## 3.4. Arrays
+
+```{r, eval=TRUE}
+A <- array(rnorm(2*3*4), dim = c(2, 3, 4))
+A
+
+apply(A, MARGIN = 2, FUN = mean)      # Across dimensions 1 and 3
+apply(A, MARGIN = c(1, 2), FUN = sum) # Across slices
+```
+
+---
+
+## 3.5. Data Frames
+
+```{r, eval=TRUE}
+N <- 100
+x1 <- sample(c("dog", "cat"), size = N, replace = TRUE)
+x2 <- sample(1:4, size = N, replace = TRUE)
+
+df <- data.frame(pet = x1, score = x2)
+df$pet
+df$score
+
+fit <- lm(score ~ pet, data = df)
+summary(fit)
+```
+
+---
+
+## 3.6. Lists
+
+```{r, eval=TRUE}
+L <- list(1, 1:5, matrix(1:16, nrow = 4, ncol = 4))
+L
+
+# Multiply and sum rank-1 matrices using lapply
+f <- function(i) {
+  x <- Z[, i, drop = FALSE] %*% Y[i, , drop = FALSE]
+  return(x)
+}
+ZY <- lapply(1:ncol(Z), FUN = f)
+ZY
+ZY[[1]] + ZY[[2]]
+```
+
+---
+
+## 3.7. Objects in the Environment
+
+```{r, eval=TRUE}
+objects()
+ls()
+```
+
+---
+
+## 4.1. Simulation Setup for the Linear Model
+
+```{r, eval=TRUE}
+set.seed(123) # Fix the seed to get the same random numbers
+
+# Setup:
+N <- 10                               # Sample size
+x <- rnorm(N, mean = 0, sd = 1)       # Predictor / Independent variable
+sigma <- 1.5                          # Standard deviation of the errors
+true_se <- sigma / sqrt(var(x)*(N-1)) # True standard error of b
+power <- 0.80                         # Statistical power
+alpha <- 0.05                         # Type-I error
+threshold <- qnorm(1-alpha)           # One-sided point for rejection
+
+# Get the b that gives the desired statistical power:
+b <- qnorm(power, mean = threshold, sd = 1) * true_se
+```
+
+---
+
+## 4.2. Simulating Power
+
+```{r, eval=TRUE}
+# Simulation setup:
+nsim <- 1000                  # Number of replicas
+pval <- vector(length = nsim) # Initialize the vector
+
+for(i in 1:nsim) {
+
+  e <- rnorm(N, mean = 0, sd = sigma)
+  y <- 1 + x*b + e
+  fit <- lm(y ~ x)
+  z_statistic <- fit$coefficients[2] / true_se
+  pval[i] <- 1-pnorm(z_statistic, mean = 0, sd = 1)
+
+}
+
+mean(pval < alpha) # Proportion of times that the pvalue is smaller than alpha
+power
+```
+
+---
+
+## 4.3. Visual Insight into Statistical Power
+
+```{r, eval=TRUE}
+z_statistic <- b / true_se
+
+# Visualize the null hypothesis:
+curve(dnorm(x, mean = 0, sd = 1), xlim = c(-4, 6), lwd = 2,
+      xlab = "Z", ylab = "Density", main = "Null vs. Alternative hypothesis")
+
+# Visualize the alternative hypothesis:
+curve(dnorm(x, mean = z_statistic, sd = 1), col = "salmon", lwd = 2, add = TRUE)
+
+# Shaded area under the alternative curve beyond the threshold:
+x_fill <- seq(threshold, 10, length.out = 100)
+y_fill <- dnorm(x_fill, mean = z_statistic, sd = 1)
+
+polygon(c(threshold, x_fill, 10),
+        c(0, y_fill, 0),
+        col = "salmon", border = NA)
+
+# Highlight the true z-statistic:
+segments(x0 = z_statistic,
+         x1 = z_statistic,
+         y0 = 0,
+         y1 = dnorm(z_statistic, mean = z_statistic),
+         lty = "dashed")
+
+axis(1, at = z_statistic, label = "z")
+legend(x = "topleft", legend = c(paste("alpha =", alpha),
+                                 paste("power =", power)))
+```
+
+---
+
+## 4.4. Visual Insight into the P-value
+
+```{r, eval=TRUE}
+# Generate a random z-statistic under the alternative hypothesis:
+z_statistic <- rnorm(1, mean = b / true_se, sd = 1)
+pval <- round(1 - pnorm(z_statistic), 3)
+
+curve(dnorm(x, mean = 0, sd = 1), xlim = c(-4, 4), lwd = 2,
+      xlab = "Z", ylab = "Density", main = "Null hypothesis")
+
+# Shade the p-value region:
+x_fill <- seq(z_statistic, 10, length.out = 100)
+y_fill <- dnorm(x_fill, mean = 0, sd = 1)
+
+polygon(c(z_statistic, x_fill, 10),
+        c(0, y_fill, 0),
+        col = "skyblue", border = NA)
+
+segments(x0 = threshold,
+         x1 = threshold,
+         y0 = 0,
+         y1 = dnorm(threshold, mean = 0, sd = 1),
+         lty = "dashed")
+
+axis(1, at = z_statistic, label = "z")
+legend(x = "topleft", legend = c(paste("alpha =", alpha),
+                                 paste("p-value =", pval)))
+```
+
+---
+
+## 5.1. Linear Model with Multiple Predictors
+
+```{r, eval=TRUE}
+set.seed(123)
+N <- 20
+p <- 4
+b <- rnorm(n = p, mean = 0.5, sd = 2)
+X <- matrix(rnorm(N*p), nrow = N, ncol = p-1)
+X <- cbind(1, X)
+
+nsim <- 1000
+sigma <- 1.5
+true_se <- sqrt(diag(sigma^2 * solve(t(X) %*% X)))
+power <- c(0.80, 0.60, 0.40, 0.05)
+alpha <- 0.05
+threshold <- qt(1 - alpha, df = N - p)
+
+f <- function(power, threshold) {
+  suppressWarnings(uniroot(\(x) (1 - pt(threshold, df = N - p, ncp = x)) - power,
+                           interval = c(-6, 6))$root)
+}
+t_stat <- sapply(power, FUN = f, threshold = threshold)
+b <- t_stat * true_se
+
+# Initialize result storage:
+coefs <- matrix(NA, nsim, p)
+se <- matrix(NA, nsim, p)
+ts <- matrix(NA, nsim, p)
+pval <- matrix(NA, nsim, p)
+upper <- matrix(NA, nsim, p)
+lower <- matrix(NA, nsim, p)
+error <- vector(length = nsim)
+
+for (i in 1:nsim) {
+  e <- rnorm(N, mean = 0, sd = sigma)
+  y <- X %*% b + e
+  fit <- lm(y ~ 0 + X)
+  coefs[i, ] <- coefficients(fit)
+  error[i] <- sum(resid(fit)^2) / (N - p)
+  se[i, ] <- sqrt(diag(error[i] * solve(t(X) %*% X)))
+  ts[i, ] <- coefs[i, ] / se[i, ]
+  upper[i, ] <- coefficients(fit) + qnorm(1 - alpha/2) * se[i, ]
+  lower[i, ] <- coefficients(fit) + qnorm(alpha/2) * se[i, ]
+  pval[i, ] <- (1 - pt(ts[i, ], df = N - p))
+}
+```
+
+---
+
+## 5.1. Checking Simulation Accuracy
+
+```{r, eval=TRUE}
+cbind(colMeans(coefs), b)     # Linear coefficients
+cbind(colMeans(se), true_se)  # Standard errors
+cbind(colMeans(ts), t_stat)   # t statistics
+
+apply(pval, MARGIN = 2, FUN = \(x) mean(x < alpha)) # Empirical power
+power
+```
+
+---
+
+## 5.2. Distribution of Coefficients
+
+```{r, eval=TRUE}
+par(mfrow = c(2, 2))
+for (i in 1:p) {
+  hist(coefs[, i], main = "Distribution of coefficients", freq = FALSE,
+       xlim = range(coefs[, i]), ylim = c(0, 1.5),
+       xlab = names(coefficients(fit))[i])
+  curve(dnorm(x, b[i], sd = true_se[i]), lwd = 2, col = "salmon", add = TRUE)
+}
+```
+
+---
+
+## 5.3. Distribution of t Statistics
+
+```{r, eval=TRUE}
+par(mfrow = c(2, 2))
+for (i in 1:p) {
+  hist(ts[, i], main = "Distribution of the t statistic", freq = FALSE,
+       xlim = range(ts[, i]), ylim = c(0, 0.4),
+       xlab = names(coefficients(fit))[i])
+  curve(dt(x, df = N - p, ncp = t_stat[i]), lwd = 2, col = "salmon", add = TRUE)
+}
+```
+
+---
+
+## 5.4. P-curve
+
+```{r, eval=TRUE}
+par(mfrow = c(2, 2))
+for (i in 1:p) {
+  title <- paste("Distribution of the p-value for power =", power[i])
+  hist(pval[, i], main = title, freq = FALSE,
+       xlim = c(0, 1), xlab = names(coefficients(fit))[i])
+}
+```
+
+---
+
+## 5.5. The Dance of Confidence Intervals
+
+```{r, eval=FALSE}
+par(mfrow = c(1, 1))
+success <- rep(0, p)
+failure <- rep(0, p)
+nsim <- 20
+
+for (i in 1:nsim) {
+  plot(b, 1:p, xlab = "Value", ylab = "Coefficient",
+       ylim = c(-1, 4.5), xlim = c(-2, 5),
+       main = "The Dance of confidence intervals",
+       yaxt = "n")
+  axis(2, labels = paste(1:p), at = 1:p)
+
+  for (j in 1:p) {
+    segments(x0 = upper[i, j], x1 = lower[i, j], y0 = j, y1 = j)
+
+    if (b[j] > lower[i, j] & b[j] < upper[i, j]) {
+      points(b[j], j, bg = "skyblue", pch = 21)
+      success[j] <- success[j] + 1
+    } else {
+      points(b[j], j, bg = "red", pch = 21)
+      failure[j] <- failure[j] + 1
+    }
+
+    text(x = 4.5, y = j, labels = paste(success[j], failure[j], sep = "/"))
+  }
+
+  text(x = 1, y = 0, paste("Iteration", i, sep = "="))
+  Sys.sleep(2)
+}
+```

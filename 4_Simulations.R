@@ -11,19 +11,42 @@
 set.seed(123) # Fix the seed to get the same random numbers
 
 # Setup:
-N <- 20                         # Sample size
-x <- rnorm(N, mean = 0, sd = 1) # Predictor / Independent variable
-sigma <- 1.5                    # Standard deviation of the errors
-true_se <- sigma / sqrt(N)      # True standard error of b
-power <- 0.80                   # Statistical power
-alpha <- 0.05                   # Type-I error
-threshold <- qnorm(1-alpha)     # One-sided point for rejection
+N <- 10                               # Sample size
+x <- rnorm(N, mean = 0, sd = 1)       # Predictor / Independent variable
+sigma <- 1.5                          # Standard deviation of the errors
+true_se <- sigma / sqrt(var(x)*(N-1)) # True standard error of b
+power <- 0.80                         # Statistical power
+alpha <- 0.05                         # Type-I error
+threshold <- qnorm(1-alpha)           # One-sided point for rejection
 
 # Get the b that attains the statistical power:
 b <- qnorm(power, mean = threshold, sd = 1) * true_se
 
+#----------------
+# 4.2. Simulation
+#----------------
+
+# Simulate random data from the linear model and get the p-values:
+
+# Simulation setup:
+nsim <- 1000                  # Number of replicas
+pval <- vector(length = nsim) # Initialize the vector
+
+for(i in 1:nsim) {
+
+  e <- rnorm(N, mean = 0, sd = sigma)
+  y <- 1 + x*b + e
+  fit <- lm(y ~ x)
+  z_statistic <- fit$coefficients[2] / true_se
+  pval[i] <- 1-pnorm(z_statistic, mean = 0, sd = 1)
+
+}
+
+mean(pval < alpha) # Proportion of times that the pvalue is smaller than alpha
+power
+
 #-----------------------------------------
-# 4.2. Visual insight to Statistical Power
+# 4.3. Visual insight to Statistical Power
 #-----------------------------------------
 
 z_statistic <- b/true_se # True z statistic
@@ -57,7 +80,7 @@ legend(x = "toplef", legend = c(paste("alpha =", alpha),
                                 paste("power =", power)))
 
 #-------------------------------
-# 4.3. Visual insight to P-value
+# 4.4. Visual insight to P-value
 #-------------------------------
 
 # Iterate the following code to get a sense of what p-values to expect if the
@@ -88,26 +111,3 @@ segments(x0 = threshold,
 axis(side = 1, at = z_statistic, label = "z")
 legend(x = "toplef", legend = c(paste("alpha =", alpha),
                                 paste("p-value =", pval)))
-
-#----------------
-# 4.4. Simulation
-#----------------
-
-# Simulate random data from the linear model and get the p-values:
-
-# Simulation setup:
-nsim <- 1000                  # Number of replicas
-pval <- vector(length = nsim) # Initialize the vector
-
-for(i in 1:nsim) {
-
-  e <- rnorm(N, mean = 0, sd = sigma)
-  y <- x*b + e
-  fit <- lm(y ~ 0 + x)
-  z_statistic <- fit$coefficients / true_se
-  pval[i] <- 1-pnorm(z_statistic, mean = 0, sd = 1)
-
-}
-
-mean(pval < alpha) # Proportion of times that the pvalue is smaller than alpha
-power

@@ -65,7 +65,6 @@ e <- "dog"
 #-------------
 
 d <- factor("cat")
-e <- "dog"
 
 #------------------
 # 2.4. Logical data
@@ -84,12 +83,8 @@ A > a  # TRUE: A is greater than a
 # 2.5. Complex numbers
 #---------------------
 
-i <- -1i
-i
-sqrt(i)            # Square root of -1i
-euler <- exp(i*pi) # Euler's identity
-euler
-Re(euler)          # Extract the real part
+i <- 1i           # Square root of -1
+exp(i*pi) + 1     # Euler's identity
 
 #----------------
 # 2.12. Constants

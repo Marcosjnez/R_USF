@@ -8,16 +8,17 @@
 # 2.1. Vectors
 #-------------
 
-n <- c(1, 2, 3, 4)   # Numeric
-l <- c(TRUE, FALSE)  # Logical
-k <- c("cat", "dog") # Characters
-x <- c(1 + 2i, 4i)   # Complex
+n <- c(1, 2, 3, 4)                           # Numeric
+l <- c(TRUE, FALSE)                          # Logical
+k <- c("cat", "dog")                         # Character
+k <- factor(c("cat", "dog"), ordered = TRUE) # Factor
+x <- c(1 + 2i, 4i)                           # Complex
 
 # Preference order:
-# 1. Characters
+# 1. Character
 # 2. Complex
 # 3. Numeric
-# 4. Logical / Factors
+# 4. Logical / Factor
 
 #-----------------------------
 # 2.2. Construction of vectors
@@ -47,9 +48,9 @@ sample(c("dog", "cat"), size = 5, replace = TRUE)
 # Automatic creation of long character vectors:
 paste("Sujeto", 1:20, sep = "")
 
-#-----------------------
-# 2.3. Vector indexation
-#-----------------------
+#---------------------
+# 2.3. Vector indexing
+#---------------------
 
 z <- 1:6
 
@@ -87,9 +88,9 @@ table(x)       # Frequencies of each element in the vector
 x[1] <- NA            # NA: Non Available
 mean(x, na.rm = TRUE) # Mean discarding Non Available values
 
-#-------------------------------
-# 2.4.1 Plot two numeric vectors
-#-------------------------------
+#---------------------------------------------
+# 2.4.1 Plot two numeric vectors (scatterplot)
+#---------------------------------------------
 
 # Create random deviates:
 x <- rnorm(n = 100, mean = 100, sd = 15) # 10 samples from a normal distribution
@@ -123,11 +124,12 @@ prob <- 0.60                            # Probability of success
 b <- rbinom(N, size = n, prob = prob)   # 1000 samples from Binomial
 empirical <- table(b)/1000              # Empirical proportions
 
-p <- dbinom(0:8, size = n, prob = prob) # Theoretical proportions
-cbind(empirical, p)                     # Compare empirical and theoretical
+factural <- dbinom(0:n, size = n,
+                   prob = prob)         # Theoretical proportions
+cbind(empirical, factural)              # Compare empirical and theoretical
 
 # Plot the theoretical distribution:
-plot(0:8, p, main = paste("X ~ B(n=", n, ", p=", prob, ")", sep = ""),
+plot(0:n, factural, main = paste("X ~ B(n=", n, ", p=", prob, ")", sep = ""),
      xlab = "X", ylab = "Probability", type = "h")
 
 #--------------------------

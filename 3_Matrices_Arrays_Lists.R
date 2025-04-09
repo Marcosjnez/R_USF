@@ -42,10 +42,10 @@ X[, 4]  # Extract all elements from column 4
 # Matrix by vector multiplication:
 
 set.seed(123)
-N <- 20                                       # Sample size
-p <- 4                                        # Number of predictors
-b <- rnorm(n = p, mean = 0.5, sd = 2)         # Linear coefficients
-X <- matrix(rnorm(N*p), nrow = N, ncol = p-1) # Matrix of predictors
+N <- 20                                           # Sample size
+p <- 4                                            # Number of predictors
+b <- rnorm(n = p, mean = 0.5, sd = 2)             # Linear coefficients
+X <- matrix(rnorm(N*(p-1)), nrow = N, ncol = p-1) # Matrix of predictors
 # Add the intercept:
 X <- cbind(1, X)
 
